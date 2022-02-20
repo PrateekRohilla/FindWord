@@ -3,14 +3,18 @@ import { MenuItem, TextField } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import React from "react";
 import "./Header.css";
-import categories from "../../data/category";
 
 
-const Header = ({ setCategory, category, word, setWord, LightMode }) => {
+const Header = ({
+  word, 
+  setWord, 
+  LightMode,
+  setMeanings  
+}) => {
 
     const handleChange = (language) => {
-        setCategory(language);
         setWord("");
+        setMeanings([]);
     }
     
     const darkTheme = createTheme({
@@ -36,20 +40,6 @@ const Header = ({ setCategory, category, word, setWord, LightMode }) => {
             value={word}
             onChange={(e) => setWord(e.target.value)}
           />
-          <TextField
-            className="select"
-            select
-            label="Language"
-            value={category}
-            onChange={(e) => handleChange(e.target.value)}
-            variant="standard"
-          >
-            {categories.map((option) => (
-              <MenuItem key={option.label} value={option.label}>
-                {option.value}
-              </MenuItem>
-            ))}
-          </TextField>
         </ThemeProvider>
       </div>
     </div>

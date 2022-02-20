@@ -8,10 +8,26 @@ import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 
 function App() {
-  const [category, setCategory] = useState("en");
   const [word, setWord] = useState("");
   const [meanings, setMeanings] = useState([]);
   const [LightMode, setLightMode] = useState(false);
+
+  const dictionaryApi = async () => {
+    try {
+      const data = await axios.get(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+      );
+
+      setMeanings(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  
+  useEffect(() => {
+    dictionaryApi();
+  }, [word]);
 
   const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
@@ -61,21 +77,7 @@ function App() {
     },
   }));
 
-  const dictionaryApi = async () => {
-    try {
-      const data = await axios.get(
-        `https://api.dictionaryapi.dev/api/v2/entries/${category}/${word}`
-      );
 
-      setMeanings(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    dictionaryApi();
-  }, [word, category]);
 
   return (
     <div
@@ -101,20 +103,22 @@ function App() {
         >
           <MaterialUISwitch
             checked={LightMode}
-            onChnage={() => setLightMode(!LightMode)}
+            onChange={() => setLightMode(!LightMode)}
           />
         </div>
 
         <Header
-          category={category}
-          setCategory={setCategory}
           word={word}
           setWord={setWord}
           LightMode={LightMode}
+          setMeanings={setMeanings}
         />
 
         {meanings && (
-          <Definitions word={word} meanings={meanings} category={category} LightMode={LightMode} />
+          <Definitions 
+          word={word} 
+          meanings={meanings}
+          LightMode={LightMode} />
         )}
       </Container>
     </div>
